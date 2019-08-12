@@ -3,7 +3,6 @@
 #include<allegro5/allegro_ttf.h>
 #include<allegro5/allegro_native_dialog.h>
 #include<allegro5/allegro_primitives.h>
-//#include<allegro5/allegro_image.h>
 const int WIDTH=640;
 const int HEIGHT=480;
 const int NUM_BULLETS=5;
@@ -20,7 +19,6 @@ struct SpaceShip{
 	int boundx;
 	int boundy;
 	int score;
-	//ALLEGRO_BITMAP *img;
 };
 struct Bullet{
 	int ID;
@@ -37,7 +35,6 @@ struct Comet{
 	int speed;
 	int boundx;
 	int boundy;
-	//ALLEGRO_BITMAP *img;
 };
 bool InitShip(SpaceShip&);
 void DrawShip(SpaceShip&);
@@ -80,10 +77,6 @@ int main(int argc,char** argv){
 	if(!display){
 		return -1;
 	}
-	//if(!al_init_image_addon()) {
-	//	al_show_native_message_box(display, "Error", "Error", "Failed to initialize al_init_image_addon!", NULL, ALLEGRO_MESSAGEBOX_ERROR);
-	//	return -1;
-	//}
 	al_init_primitives_addon();
 	al_install_keyboard();
 	al_install_mouse();
@@ -200,14 +193,6 @@ bool InitShip(SpaceShip &ship){
 	ship.boundx=6;
 	ship.boundy=7;
 	ship.score=0;
-	/*
-	ship.img=al_load_bitmap("../res/ship.png");
-	if(ship.img==NULL){
-		return false;
-	}else{
-		return true;
-	}
-	*/
 	return true;
 }
 void DrawShip(SpaceShip &ship){
@@ -278,13 +263,6 @@ bool InitComet(Comet comets[], int size){
 		comets[i].speed=5;
 		comets[i].boundx=18;
 		comets[i].boundy=18;
-		/*
-		comets[i].img=al_load_bitmap("../res/comet.png");
-		if(comets[i].img==NULL){
-			ret=false;
-			break;
-		}
-		*/
 		ret=true;
 	}
 	return ret;

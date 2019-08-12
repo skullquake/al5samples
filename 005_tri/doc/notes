@@ -1,0 +1,9 @@
+requires:
+	mingw32/mingw-w64-i686-allegro 5.2.4-2 [installed]
+	    Portable library mainly aimed at video game and multimedia programming (mingw-w64)
+	mingw64/mingw-w64-x86_64-allegro 5.2.4-2 [installed]
+	    Portable library mainly aimed at video game and multimedia programming (mingw-w64)
+	mingw32/mingw-w64-i686-freetype 2.9.1-1
+	    TrueType font rendering library (mingw-w64)
+	mingw64/mingw-w64-x86_64-freetype 2.9.1-1
+	    TrueType font rendering library (mingw-w64)

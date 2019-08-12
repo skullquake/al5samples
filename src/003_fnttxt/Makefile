@@ -9,11 +9,11 @@ $(BIN):$(SRC)
 	@$(CC) \
 		$(CFLAGS)\
 		$(SRC)\
-		-lallegro.dll\
-		-lallegro_dialog.dll\
-		-lallegro_font.dll\
-		-lallegro_ttf.dll\
-		-lfreetype.dll\
+		-lallegro\
+		-lallegro_dialog\
+		-lallegro_font\
+		-lallegro_ttf\
+		-lfreetype\
 		-o $(BIN)
 #		-lallegro_primitives.dll
 .phony:

@@ -9,9 +9,9 @@ $(BIN):$(SRC)
 	@$(CC) \
 		$(CFLAGS)\
 		$(SRC)\
-		-lallegro.dll\
-		-lallegro_dialog.dll\
-		-lallegro_primitives.dll\
+		-lallegro\
+		-lallegro_dialog\
+		-lallegro_primitives\
 		-o $(BIN)
 .phony:
 	run \

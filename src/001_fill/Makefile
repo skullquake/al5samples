@@ -2,8 +2,8 @@ CC=g++
 SRC=./src/a.cpp
 BIN=./bin/a.out
 CFLAGS=\
-       -Wall \
-       	-I./include \
+	-Wall \
+	-I./include \
 	-L./lib 
 $(BIN):$(SRC)
 	@$(CC) \
@@ -11,10 +11,12 @@ $(BIN):$(SRC)
 		$(SRC) \
 		-lallegro \
 		-lallegro_dialog \
+		-static-libstdc++ \
 		-o $(BIN)
 .phony:
 	run \
-	clean
+	dist \
+	clean 
 run:
 	@./bin/a.out
 clean:

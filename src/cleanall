@@ -2,3 +2,4 @@
 ls -d */|while read DIR;do
 	make clean -C $DIR
 done
+rm -r ../dist/*

@@ -16,9 +16,9 @@ int main(int argc,char** argv){
 	}
 	al_init_font_addon();
 	al_init_ttf_addon();
-	ALLEGRO_FONT *font24=al_load_font("./res/a.ttf",24,0);
-	ALLEGRO_FONT *font36=al_load_font("./res/a.ttf",36,0);
-	ALLEGRO_FONT *font18=al_load_font("./res/a.ttf",18,0);
+	ALLEGRO_FONT *font24=al_load_font("../res/a.ttf",24,0);
+	ALLEGRO_FONT *font36=al_load_font("../res/a.ttf",36,0);
+	ALLEGRO_FONT *font18=al_load_font("../res/a.ttf",18,0);
 	int screen_w=al_get_display_width(display);
 	int screen_h=al_get_display_height(display);
 	al_clear_to_color(al_map_rgb(255,0,0));

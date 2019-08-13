@@ -3,6 +3,7 @@
 #include<allegro5/allegro_ttf.h>
 #include<allegro5/allegro_native_dialog.h>
 #include<allegro5/allegro_primitives.h>
+#include<allegro5/allegro_image.h>
 const int WIDTH=640;
 const int HEIGHT=480;
 const int NUM_BULLETS=5;
@@ -18,7 +19,10 @@ struct SpaceShip{
 	int speed;
 	int boundx;
 	int boundy;
+	int sw;
+	int sh;
 	int score;
+	ALLEGRO_BITMAP *img;
 };
 struct Bullet{
 	int ID;
@@ -26,6 +30,7 @@ struct Bullet{
 	int y;
 	bool live;
 	int speed;
+	ALLEGRO_BITMAP *img;
 };
 struct Comet{
 	int ID;
@@ -35,6 +40,7 @@ struct Comet{
 	int speed;
 	int boundx;
 	int boundy;
+	ALLEGRO_BITMAP *img;
 };
 bool InitShip(SpaceShip&);
 void DrawShip(SpaceShip&);
@@ -56,8 +62,6 @@ int main(int argc,char** argv){
 	Bullet bullets[5];
 	Comet comets[NUM_COMETS];
 	SpaceShip ship;
-	InitShip(ship);
-	StartComet(comets, NUM_COMETS);
 	int FPS=60;
 	int width=WIDTH;
 	int height=HEIGHT;
@@ -77,6 +81,10 @@ int main(int argc,char** argv){
 	if(!display){
 		return -1;
 	}
+	if(!al_init_image_addon()) {
+		al_show_native_message_box(display, "Error", "Error", "Failed to initialize al_init_image_addon!", NULL, ALLEGRO_MESSAGEBOX_ERROR);
+		return -1;
+	}
 	al_init_primitives_addon();
 	al_install_keyboard();
 	al_install_mouse();
@@ -94,6 +102,8 @@ int main(int argc,char** argv){
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_start_timer(timer);
+	InitShip(ship);
+	StartComet(comets, NUM_COMETS);
 	do{
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
@@ -171,7 +181,11 @@ int main(int argc,char** argv){
 			DrawComet(comets, NUM_COMETS);
 			redraw = false;
 			al_draw_filled_circle(m_pos_x,m_pos_y,5,al_map_rgb(128,128,128));
-			al_draw_textf(font18,al_map_rgb(255,255,255),20,20,ALLEGRO_ALIGN_LEFT,"k[%i,%i],m[%i,%i],s[%i]",ship.x,ship.y,m_pos_x,m_pos_y,score);
+			al_draw_filled_rectangle(0,0,WIDTH,64,al_map_rgb(32,32,32));
+			al_draw_filled_rectangle(0,48,WIDTH,64,al_map_rgb(64,64,64));
+			//al_draw_textf(font24,al_map_rgb(128,128,128),22,22,ALLEGRO_ALIGN_LEFT,"k[%i,%i],m[%i,%i],s[%i]",ship.x,ship.y,m_pos_x,m_pos_y,score);
+			//al_draw_textf(font24,al_map_rgb(196,196,196),20,20,ALLEGRO_ALIGN_LEFT,"k[%i,%i],m[%i,%i],s[%i]",ship.x,ship.y,m_pos_x,m_pos_y,score);
+			al_draw_textf(font24,al_map_rgb(196,196,196),20,20,ALLEGRO_ALIGN_LEFT,"SCORE: %i",score);
 			al_flip_display();
 			al_clear_to_color(al_map_rgb(0,0,0));
 		}
@@ -190,16 +204,27 @@ bool InitShip(SpaceShip &ship){
 	ship.ID=PLAYER;
 	ship.lives=3;
 	ship.speed=7;
-	ship.boundx=6;
-	ship.boundy=7;
+	ship.sw=64;
+	ship.sh=64;
+	ship.boundx=32;
+	ship.boundy=32;
 	ship.score=0;
+	ship.img=al_load_bitmap("../res/a.png");
 	return true;
 }
 void DrawShip(SpaceShip &ship){
-	al_draw_filled_rectangle(ship.x,ship.y-9,ship.x+10,ship.y-7,al_map_rgb(255,0,0));
-	al_draw_filled_rectangle(ship.x,ship.y+9,ship.x+10,ship.y+7,al_map_rgb(255,0,0));
-	al_draw_filled_triangle(ship.x-12,ship.y-17,ship.x+12,ship.y,ship.x-12,ship.y+17,al_map_rgb(0,255,0));
-	al_draw_filled_rectangle(ship.x-12,ship.y-2,ship.x+15,ship.y+2,al_map_rgb(0,0,255));
+	al_draw_scaled_bitmap(
+		ship.img,
+		0,
+		0,
+		al_get_bitmap_width(ship.img),
+		al_get_bitmap_height(ship.img),
+		ship.x-ship.sw/2,
+		ship.y-ship.sh/2,
+		ship.sw,
+		ship.sh,
+		0
+	);
 }
 
 void MoveShipLeft(SpaceShip &ship){
@@ -209,8 +234,8 @@ void MoveShipLeft(SpaceShip &ship){
 }
 void MoveShipUp(SpaceShip &ship){
 	ship.y-=ship.speed;
-	if(ship.y<0)
-		ship.y=0;
+	if(ship.y<64)
+		ship.y=64;
 }
 void MoveShipDown(SpaceShip&ship){
 	ship.y+=ship.speed;
@@ -228,12 +253,26 @@ void InitBullet(Bullet bullet[], int size){
 		bullet[i].ID=BULLET;
 		bullet[i].speed=10;
 		bullet[i].live=false;
+		bullet[i].img=al_load_bitmap("../res/b.png");
 	}
 }
 void DrawBullet(Bullet bullet[], int size){
 	for(int i=0;i<size;i++){
 		if(bullet[i].live)
-			al_draw_filled_circle(bullet[i].x,bullet[i].y,2,al_map_rgb(255,255,255));
+			//al_draw_filled_circle(bullet[i].x,bullet[i].y,2,al_map_rgb(255,255,255));
+		al_draw_scaled_bitmap(
+			bullet[i].img,
+			0,
+			0,
+			al_get_bitmap_width(bullet[i].img),
+			al_get_bitmap_height(bullet[i].img),
+			bullet[i].x-8,
+			bullet[i].y-8,
+			24,
+			16,
+			0
+		);
+
 	}
 }
 void FireBullet(Bullet bullet[], int size, SpaceShip &ship){
@@ -263,6 +302,7 @@ bool InitComet(Comet comets[], int size){
 		comets[i].speed=5;
 		comets[i].boundx=18;
 		comets[i].boundy=18;
+		comets[i].img=al_load_bitmap("../res/c.png");
 		ret=true;
 	}
 	return ret;
@@ -270,7 +310,20 @@ bool InitComet(Comet comets[], int size){
 void DrawComet(Comet comets[], int size){
 	for(int i=0;i<size;i++){
 		if(comets[i].live){
-			al_draw_filled_circle(comets[i].x,comets[i].y,20,al_map_rgb(255,0,0));
+			//al_draw_filled_circle(comets[i].x,comets[i].y,20,al_map_rgb(255,0,0));
+			al_draw_scaled_bitmap(
+				comets[i].img,
+				0,
+				0,
+				al_get_bitmap_width(comets[i].img),
+				al_get_bitmap_height(comets[i].img),
+				comets[i].x-8,
+				comets[i].y-8,
+				64,
+				32,
+				0
+			);
+
 		}
 	}
 }
@@ -280,7 +333,7 @@ void StartComet(Comet comets[], int size){
 			if(rand()%50==0){
 				comets[i].live=true;
 				comets[i].x=WIDTH;
-				comets[i].y=30+rand()%(HEIGHT-60);
+				comets[i].y=30+rand()%(HEIGHT-128)+64;
 				break;
 			}
 		}
